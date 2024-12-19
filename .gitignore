@@ -5,3 +5,4 @@ mml/wandb/
 mml/data/coco/
 mml/weights/*
 mml/datasets/*
+mml/output/*
