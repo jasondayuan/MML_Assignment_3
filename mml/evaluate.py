@@ -18,7 +18,7 @@ sys.path.append('..')
 
 from mml.data import ImageCaptionDataset
 from mml.model import Net
-from mml.utils import ConfigS, ConfigL
+from mml.utils import ConfigS, ConfigCustom
 
 parser = argparse.ArgumentParser()
 
@@ -31,8 +31,7 @@ parser.add_argument(
     "--size",
     type=str,
     default="S",
-    help="Model size [S, L]",
-    choices=["S", "L", "s", "l"],
+    choices=["S", "C", "s", "c"],
 )
 
 parser.add_argument(
@@ -49,7 +48,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-config = ConfigL() if args.size.upper() == "L" else ConfigS()
+config = ConfigCustom() if args.size.upper() == "C" else ConfigS()
 
 ckp_path = os.path.join(config.weights_dir, args.checkpoint_name)
 

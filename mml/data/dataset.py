@@ -13,7 +13,7 @@ import numpy as np
 
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import GPT2Tokenizer
+from transformers import GPT2Tokenizer, AutoTokenizer
 import pickle
 import json
 
@@ -61,9 +61,13 @@ def cl_fn(batch, tokenizer):
     return img_emb, input_ids, attention_mask
 
 
-def get_loader(dataset, bs_exp=5, shuffle=True, num_workers=0, pin_memory=False):
-    tokenizer = GPT2Tokenizer.from_pretrained("gpt2-medium")
-    tokenizer.pad_token = tokenizer.eos_token
+def get_loader(dataset, bs_exp=5, shuffle=True, num_workers=0, pin_memory=False, text_model="gpt2-medium"):
+    if 'gpt2' in text_model:
+        tokenizer = GPT2Tokenizer.from_pretrained(text_model)
+        tokenizer.pad_token = tokenizer.eos_token
+    else:
+        tokenizer = AutoTokenizer.from_pretrained(text_model)
+        tokenizer.pad_token = tokenizer.eos_token
 
     return DataLoader(
         dataset,
@@ -73,13 +77,3 @@ def get_loader(dataset, bs_exp=5, shuffle=True, num_workers=0, pin_memory=False)
         num_workers=num_workers,
         pin_memory=pin_memory,
     )
-
-if __name__ == "__main__":
-    clip_model = "openai/clip-vit-base-patch32"
-    root_dir = "coco"
-    split = 'val'
-    dataset = ImageCaptionDataset(clip_model, split, root_dir)
-    loader = get_loader(dataset)
-    from tqdm import tqdm
-    for batch in tqdm(loader):
-        pass

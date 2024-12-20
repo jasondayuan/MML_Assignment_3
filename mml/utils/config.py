@@ -32,7 +32,7 @@ class ConfigS:
 
 
 @dataclass
-class ConfigL:
+class ConfigCustom:
     """
     Project's main config.
     """
@@ -53,4 +53,4 @@ class ConfigL:
     forward_expansion: int = 4
     max_len: int = 40
     dropout: float = 0.08
-    weights_dir: str = os.path.join("weights", "large")
+    weights_dir: str = os.path.join("weights", "custom")

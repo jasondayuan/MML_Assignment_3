@@ -16,7 +16,7 @@ sys.path.append('..')
 import wandb
 from mml.data import ImageCaptionDataset, get_loader
 from mml.model import Net, Trainer
-from mml.utils import ConfigS, ConfigL, LRWarmup
+from mml.utils import ConfigS, ConfigCustom, LRWarmup
 
 parser = argparse.ArgumentParser()
 
@@ -29,13 +29,12 @@ parser.add_argument(
     "--size",
     type=str,
     default="S",
-    help="Model size [S, L]",
-    choices=["S", "L", "s", "l"],
+    choices=["S", "C", "s", "c"],
 )
 
 args = parser.parse_args()
 
-config = ConfigL() if args.size.upper() == "L" else ConfigS()
+config = ConfigCustom() if args.size.upper() == "C" else ConfigS()
 
 # set seed
 random.seed(config.seed)
@@ -66,6 +65,7 @@ if __name__ == "__main__":
         shuffle=True,
         num_workers=config.num_workers if is_cuda else 0,
         pin_memory=is_cuda,
+        text_model=config.text_model,
     )
 
     valid_loader = get_loader(
@@ -74,6 +74,7 @@ if __name__ == "__main__":
         shuffle=False,
         num_workers=config.num_workers if is_cuda else 0,
         pin_memory=is_cuda,
+        text_model=config.text_model,
     )
 
     model = Net(
